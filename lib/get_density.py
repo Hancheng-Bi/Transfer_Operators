@@ -51,18 +51,21 @@ def sample_Gau(gen,num ,std, shift,dim = 1, shift_prob = 0.5):
         dim -= 1
     return x.T,y.T
 
-def EMML(EK_x,EK_y,x,M,EMML_itr):
+def EMML(EK_x,EK_y,M,EMML_itr,mus = None):
     """
     return probability density xi that minimise J_M^N(E_k(xi)) which is defined in Rmk17 and Def19 in the paper.
     EK_x = transport plan k_{mu,tilde{mu}}. mu otimes mu as defined in Prop18 
     EK_y = transport plan k_{nu,tilde{nu}}.nu otimes nu
-    x = mu^N, point clouds for the first marginal
     M = number of point pairs in one batch
     EMML_itr = iteration loops
+    mus = probability vector represent the subsampled mu_S, default is uniform.
     """
+
     N = int(EK_x.shape[0]/M)
     S = int(EK_x.shape[1])
     mn = M * N
+    if mus is None:
+        mus = np.full(S,1./S)
     def Pti(x, i):
         return (EK_y.T @ x)[:, np.newaxis] * np.sum(EK_x.T[:,i*M:(i+1)*M], axis=1)[np.newaxis, :] * (S**2 * N)
 
@@ -77,14 +80,17 @@ def EMML(EK_x,EK_y,x,M,EMML_itr):
     Pcs = [Pti(np.ones(N * M), i) for i in range(N)]
     Pcs = np.sum(Pcs,axis=0)
     rho = np.full((S, S), S**-2)
+    rho *= S * mus[:,np.newaxis]
     for _ in range(EMML_itr):
         d = np.zeros((S, S))
         for i in range(N):
             d += Ptii(1. / Pii(rho, i), i)
         rho *= d / mn
-        rho /= np.sum(rho, axis=1)[:,np.newaxis]* S
-        rho /= Pcs 
-    return rho*N
+        rho /= Pcs
+        rho /= np.sum(rho, axis=1)[:,np.newaxis]
+        rho *= S * mus[:,np.newaxis] 
+        
+    return rho/S
 
 def get_Dens(gen,M:int,N:int,S:int,std:float,jump:float,jump_prob:float,ve:float,subsample:bool,EMML_itr:int = 10000,E:int = 100):
     """
@@ -118,7 +124,7 @@ def get_Dens(gen,M:int,N:int,S:int,std:float,jump:float,jump_prob:float,ve:float
     EK_y = Res_Y[1].toarray() #Transport plan from nu to subsampled y points
 
     #EMML minimisation of cost function
-    rho = EMML(EK_x,EK_y,x,M,EMML_itr)
+    rho = EMML(EK_x,EK_y,M,EMML_itr)
 
     #Do kernel extension for illustration, x_e and y_e should be close to the true marginal (in this case is uniform so we take linspace) 
     x_e = y_e = np.linspace(0,1,E,endpoint = False)
