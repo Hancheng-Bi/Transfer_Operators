@@ -1,13 +1,13 @@
 ## Overview
 
-This project provides code for generating figures (2 - 11) in the paper [Transfer Operators from Batches of Unpaired Points via Entropic Transport Kernels](https://arxiv.org/abs/2402.08425)
+This project provides code for generating figures (4 - 13) in the paper [Transfer Operators from Batches of Unpaired Points via Entropic Transport Kernels](https://arxiv.org/abs/2402.08425)
 
 ## Getting started
-* [Data_345.ipynb](./Data_345.ipynb) and [Data_6.py](./Data_6.py) are used to generate simulated data for the corresponding plots. To save your time, we also provide ready-to-use data: [Data_3.csv](./Data_3.csv), [Data_4.csv](./Data_4.csv), [Data_5.csv](./Data_5.csv), [Data_6.csv](./Data_6.csv).
-* [kernel_example.ipynb](./kernel_example.ipynb) is for generating figure 2 and the kernel density plots in figure 3,4,5.
-* [plot_line_345.ipynb](./plot_line_345.ipynb) is for generating the line plots in figure 3,4,5.
-* [plot_6.ipynb](./plot_6.ipynb) and [plot_7.ipynb](./plot_7.ipynb) are for generating figure 6 and 7 correspondingly.
-* [double_gyre_example.ipynb](./double_gyre_example.ipynb) is for generating figure 8,9,10,11.
+* [Data_567.ipynb](./Data_567.ipynb) and [Data_8.py](./Data_8.py) are used to generate simulated data for the corresponding plots. To save your time, we also provide ready-to-use data: [Data_5.csv](./Data_5.csv), [Data_6.csv](./Data_6.csv), [Data_7.csv](./Data_7.csv), [Data_8.csv](./Data_8.csv).
+* [kernel_example.ipynb](./kernel_example.ipynb) is for generating figure 4 and the kernel density plots in figure 5,6,7.
+* [plot_line_567.ipynb](./plot_line_567.ipynb) is for generating the line plots in figure 5,6,7.
+* [plot_8.ipynb](./plot_8.ipynb) and [plot_9.ipynb](./plot_9.ipynb) are for generating figure 8 and 9 correspondingly.
+* [double_gyre_example.ipynb](./double_gyre_example.ipynb) is for generating figure 10,11,12,13.
 
 ## License (MIT License)
 Copyright (c) 2024, Florian Beier, Hancheng Bi, Clément Sarrazin, Bernhard Schmitzer, Gabriele Steidl, Thilo Stier
