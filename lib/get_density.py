@@ -114,13 +114,13 @@ def EMML(EK_x,EK_y,M,EMML_itr,dev,mus = None):
     if mus is None:
         mus = torch.full([S],1./S,device = dev, dtype = torch.float64)
     def Pti(x, i):
-        return (EK_y.T @ x)[:, torch.newaxis] * torch.sum(EK_x.T[:,i*M:(i+1)*M], axis=1)[torch.newaxis, :] * (S**2 * N)
+        return (EK_y.T @ x)[:, None] * torch.sum(EK_x.T[:,i*M:(i+1)*M], axis=1)[None, :] * (S**2 * N)
 
-    def Pii(rho, i):
-        return (EK_y[i*M:(i+1)*M,:] @ (rho @ torch.sum(EK_x.T[:,i*M:(i+1)*M], axis=1))) * (S**2 * N)
+#     def Pii(rho, i):
+#         return (EK_y[i*M:(i+1)*M,:] @ (rho @ torch.sum(EK_x.T[:,i*M:(i+1)*M], axis=1))) * (S**2 * N)
 
-    def Ptii(x, i):
-        return (EK_y[i*M:(i+1)*M,:].T @ x)[:, torch.newaxis] * torch.sum(EK_x.T[:,i*M:(i+1)*M], axis=1)[torch.newaxis, :] * (S**2 * N)
+#     def Ptii(x, i):
+#         return (EK_y[i*M:(i+1)*M,:].T @ x)[:, torch.newaxis] * torch.sum(EK_x.T[:,i*M:(i+1)*M], axis=1)[torch.newaxis, :] * (S**2 * N)
 
     def Pii_parallel(rho):
         # (EK_y[i*M:(i+1)*M,:] @ (rho @ torch.sum(EK_x.T[:,i*M:(i+1)*M], axis=1))) * (S**2 * N)
@@ -147,7 +147,7 @@ def EMML(EK_x,EK_y,M,EMML_itr,dev,mus = None):
     Pcs = torch.sum(Pcs,axis=0)
     # Pcs = torch.tensor(Pcs,device = dev,dtype = torch.float64)
     rho = torch.full((S, S), (1.*S)**-2,device = dev, dtype = torch.float64)
-    rho *= S * mus[:,torch.newaxis]
+    rho *= S * mus[:,None]
     for _ in range(EMML_itr):
     #     d = torch.zeros((S, S),device = dev, dtype = torch.float64)
     #     for i in range(N):
@@ -155,8 +155,8 @@ def EMML(EK_x,EK_y,M,EMML_itr,dev,mus = None):
         d = Ptii_parallel(1./Pii_parallel(rho))
         rho *= d / mn
         rho /= Pcs
-        rho /= torch.sum(rho, axis=1)[:,torch.newaxis]
-        rho *= S * mus[:,torch.newaxis] 
+        rho /= torch.sum(rho, axis=1)[:,None]
+        rho *= S * mus[:,None] 
         
     return rho/S
 
