@@ -120,7 +120,7 @@ def EMML(EK_x,EK_y,M,EMML_itr,dev,mus = None):
 #         return (EK_y[i*M:(i+1)*M,:] @ (rho @ torch.sum(EK_x.T[:,i*M:(i+1)*M], axis=1))) * (S**2 * N)
 
 #     def Ptii(x, i):
-#         return (EK_y[i*M:(i+1)*M,:].T @ x)[:, torch.newaxis] * torch.sum(EK_x.T[:,i*M:(i+1)*M], axis=1)[torch.newaxis, :] * (S**2 * N)
+#         return (EK_y[i*M:(i+1)*M,:].T @ x)[:, ]] * torch.sum(EK_x.T[:,i*M:(i+1)*M], axis=1)[torch.newaxis, :] * (S**2 * N)
 
     def Pii_parallel(rho):
         # (EK_y[i*M:(i+1)*M,:] @ (rho @ torch.sum(EK_x.T[:,i*M:(i+1)*M], axis=1))) * (S**2 * N)
@@ -205,8 +205,8 @@ def get_Dens(gen,M:int,N:int,S:int,std:float,jump:float,jump_prob:float,ve:float
     x_e = y_e = np.linspace(0,1,E,endpoint=False)
     xpot = 1/(torch.sum(torch.exp(-cost(x_e,sx,dev)/ve + LX[1]["log_v"]),axis=1))
     ypot = 1/(torch.sum(torch.exp(-cost(y_e,sy,dev)/ve + LY[1]["log_v"]),axis=1))
-    F_X = xpot[:,torch.newaxis]*torch.exp(-cost(x_e,sx,dev)/ve + LX[1]["log_v"])*S
-    F_Y = ypot[:,torch.newaxis]*torch.exp(-cost(y_e,sy,dev)/ve + LY[1]["log_v"])*S
+    F_X = xpot[:,None]*torch.exp(-cost(x_e,sx,dev)/ve + LX[1]["log_v"])*S
+    F_Y = ypot[:,None]*torch.exp(-cost(y_e,sy,dev)/ve + LY[1]["log_v"])*S
     return F_Y@rho@F_X.T
 
 
